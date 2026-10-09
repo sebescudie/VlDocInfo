@@ -1,0 +1,21 @@
+# Build output
+artifacts/
+velopack-releases/
+
+# Build system temp (logs, downloaded dotnet, build graph)
+.fallout/temp/
+
+# .NET build directories (in case .cs/.csproj sources are added later)
+bin/
+obj/
+
+# IDE / editor
+.vs/
+.vscode/
+.idea/
+*.user
+
+# OS cruft
+Thumbs.db
+desktop.ini
+.DS_Store
