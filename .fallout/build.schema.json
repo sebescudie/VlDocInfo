@@ -26,7 +26,10 @@
       "enum": [
         "Clean",
         "Compile",
-        "Pack"
+        "DownloadPreviousRelease",
+        "Pack",
+        "Release",
+        "Upload"
       ]
     },
     "Verbosity": {
@@ -111,9 +114,10 @@
           "type": "string",
           "description": "Path to vvvvc.exe"
         },
-        "SkipDownloadPreviousRelease": {
-          "type": "boolean",
-          "description": "Skip downloading previous Velopack version"
+        "GithubReleaseToken": {
+          "type": "string",
+          "description": "Github release token",
+          "default": "Secrets must be entered via 'fallout :secrets [profile]'"
         }
       }
     },
