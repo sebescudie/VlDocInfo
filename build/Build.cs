@@ -17,7 +17,6 @@ class Build : FalloutBuild
     public static int Main() => Execute<Build>(x => x.Compile);
 
     [Parameter("Path to vvvvc.exe")] private string CompilerPath;
-    [Parameter("Skip downloading previous Velopack version")] private bool SkipDownloadPreviousRelease = false;
     [Parameter("Github release token")] [Secret] string GithubReleaseToken;
     
     private string ProductName = "VlDocInfo";
