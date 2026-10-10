@@ -1568,10 +1568,10 @@
       <Canvas Id="DJJzIHprTt2PLGJGNUd9uM" Name="UserInterface" Position="188,400">
         <!--
 
-    ************************ DrawDocument ************************
+    ************************ App ************************
 
 -->
-        <Node Name="DrawDocument" Bounds="330,310" Id="KYLPZzF6btSLjYhucXUmsO">
+        <Node Name="App" Bounds="330,310" Id="KYLPZzF6btSLjYhucXUmsO">
           <p:NodeReference>
             <Choice Kind="ContainerDefinition" />
           </p:NodeReference>
@@ -1584,7 +1584,7 @@
                   <Choice Kind="ProcessAppFlag" Name="Renderer" />
                 </p:NodeReference>
                 <Pin Id="LISVeN0RZcAP47v9EDMCXX" Name="Node Context" Kind="InputPin" IsHidden="true" />
-                <Pin Id="MEL4gAQawFoLbHQAmdCFcm" Name="Bounds" Kind="InputPin" DefaultValue="2054, 292, 495, 271" IsHidden="true" />
+                <Pin Id="MEL4gAQawFoLbHQAmdCFcm" Name="Bounds" Kind="InputPin" DefaultValue="1615, 639, 495, 271" IsHidden="true" />
                 <Pin Id="NqG9Kc82x1gLbOjqgqKEZH" Name="Save Bounds" Kind="InputPin" IsHidden="true" />
                 <Pin Id="GKuGbYpySNXLEJNp4iY9Gy" Name="Bound to Document" Kind="InputPin" IsHidden="true" />
                 <Pin Id="JrJGBzG6gWLQNTEVyeDJ59" Name="Dialog If Document Changed" Kind="InputPin" IsHidden="true" />
@@ -1646,7 +1646,7 @@
                       <Node Bounds="536,560,67,19" Id="VaoJiaalhStM6EPrWCa8Vo">
                         <p:NodeReference LastCategoryFullName="Main.DrawDocument" LastDependency="VlDocInfo.vl">
                           <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
-                          <CategoryReference Kind="Category" Name="DrawDocument" NeedsToBeDirectParent="true" />
+                          <CategoryReference Kind="Category" Name="App" NeedsToBeDirectParent="true" />
                           <Choice Kind="ProcessAppFlag" Name="AppUpdate" />
                         </p:NodeReference>
                         <Pin Id="H79uHJhqTrxNjjDckw2s7s" Name="Node Context" Kind="InputPin" IsHidden="true" />
@@ -3539,7 +3539,7 @@
           <Node Bounds="526,570,86,19" Id="UHMrFmoBKCuQLQT9oK1vse">
             <p:NodeReference LastCategoryFullName="Main" LastDependency="callmenames-2026-10-08.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
-              <Choice Kind="ProcessAppFlag" Name="DrawDocument" />
+              <Choice Kind="ProcessAppFlag" Name="App" />
             </p:NodeReference>
             <Pin Id="OvZCW8X7ZV9NNcLLTajPRe" Name="Node Context" Kind="InputPin" IsHidden="true" />
             <Pin Id="LVuEvI0BWUbO3Z7sdDpSAX" Name="Condition" Kind="InputPin" />
