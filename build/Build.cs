@@ -18,30 +18,31 @@ class Build : FalloutBuild
 
     [Parameter("Path to vvvvc.exe")] private string CompilerPath;
     [Parameter("Skip downloading previous Velopack version")] private bool SkipDownloadPreviousRelease = false;
+    [Parameter("Github release token")] [Secret] string GithubReleaseToken;
     
-    private string _productName = "VlDocInfo";
+    private string ProductName = "VlDocInfo";
     
-    private AbsolutePath DocumentFile => RootDirectory / $"{_productName}.vl";
+    private AbsolutePath DocumentFile => RootDirectory / $"{ProductName}.vl";
     private AbsolutePath VersionFile => RootDirectory / "version.props";
     private AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
-    private AbsolutePath VvvvcOutputDirectory => ArtifactsDirectory / $"{_productName}";
+    private AbsolutePath VvvvcOutputDirectory => ArtifactsDirectory / $"{ProductName}";
     private AbsolutePath IconFile => RootDirectory / "img" / "icon.ico";
     
     private AbsolutePath VelopackReleasesDirectory => RootDirectory / "velopack-releases";
     
     string Version => XDocument.Load(VersionFile).Descendants("Version").FirstOrDefault()?.Value;
     
-    private string _repositoryUrl = "https://github.com/sebescudie/VlDocInfo";
+    private string RepositoryUrl = "https://github.com/sebescudie/VlDocInfo";
     
-    
-    Target Clean => _ => _
+    private Target Clean => _ => _
         .Executes(() =>
         {
             ArtifactsDirectory.CreateOrCleanDirectory();
             VelopackReleasesDirectory.CreateOrCleanDirectory();
         });
 
-    Target Compile => _ => _
+    private Target Compile => _ => _
+        .Before(DownloadPreviousRelease)
         .DependsOn(Clean)
         .Executes(() =>
         {
@@ -49,26 +50,42 @@ class Build : FalloutBuild
             build.WaitForExit();
         });
 
+    private Target DownloadPreviousRelease => _ => _
+        .Before(Pack)
+        .Executes(() =>
+        {
+            var downloadPreviousRelease = ProcessTasks.StartProcess("vpk",
+                $"download github --repoUrl {RepositoryUrl} --outputDir {VelopackReleasesDirectory}");
+            downloadPreviousRelease.WaitForExit();
+        });
+    
     private Target Pack => _ => _
         .DependsOn(Compile)
+        .DependsOn(DownloadPreviousRelease)
         .Requires(() => !string.IsNullOrEmpty(Version))
         .Requires(() => File.Exists(IconFile))
         .Executes(() =>
         {
-            var tool = "vpk";
-
-            // Download previous release to compute deltas, if any
-            if (!SkipDownloadPreviousRelease)
-            {
-                var downloadPreviousRelease = ProcessTasks.StartProcess(tool,
-                    $"download github --repoUrl {_repositoryUrl} --outputDir {VelopackReleasesDirectory}");
-                downloadPreviousRelease.WaitForExit();
-            }
-            
-            // Pack current release
-            var packCurrentRelease = ProcessTasks.StartProcess(tool,
-                $"pack --packId {_productName} --packTitle {_productName} --icon {IconFile} --packVersion {Version} --packDir {VvvvcOutputDirectory} --outputDir {VelopackReleasesDirectory} --mainExe {_productName}.exe --framework net10.0-x64-desktop");
+            var packCurrentRelease = ProcessTasks.StartProcess("vpk",
+                $"pack --packId {ProductName} --packTitle {ProductName} --icon {IconFile} --packVersion {Version} --packDir {VvvvcOutputDirectory} --outputDir {VelopackReleasesDirectory} --mainExe {ProductName}.exe --framework net10.0-x64-desktop");
             packCurrentRelease.WaitForExit();
         });
 
+    private Target Upload => _ => _
+        .DependsOn(Pack)
+        .Requires(() => !string.IsNullOrEmpty(GithubReleaseToken))
+        .Executes(() =>
+        {
+            var uploadNewRelease = ProcessTasks.StartProcess("vpk", 
+                $"upload github --repoUrl {RepositoryUrl} --outputDir {VelopackReleasesDirectory} --publish --releaseName {Version} --tag {Version} --token {GithubReleaseToken}");
+            uploadNewRelease.WaitForExit();
+        });
+
+    private Target Release => _ => _
+        .DependsOn(Pack)
+        .DependsOn(Upload)
+        .Executes(() =>
+        {
+
+        });
 }
