@@ -8,6 +8,7 @@ using Fallout.Common.Execution;
 using Fallout.Common.IO;
 using Fallout.Solutions;
 using Fallout.Common.Tooling;
+using Fallout.Common.Tools.Git;
 using Fallout.Common.Utilities.Collections;
 using static Fallout.Common.EnvironmentInfo;
 using static Fallout.Common.IO.PathConstruction;
@@ -73,6 +74,7 @@ class Build : FalloutBuild
     private Target Upload => _ => _
         .DependsOn(Pack)
         .Requires(() => !string.IsNullOrEmpty(GithubReleaseToken))
+        .Requires(() => GitTasks.GitHasCleanWorkingCopy())
         .Executes(() =>
         {
             var uploadNewRelease = ProcessTasks.StartProcess("vpk", 
