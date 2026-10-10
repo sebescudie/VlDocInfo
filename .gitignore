@@ -19,3 +19,5 @@ obj/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+/.fallout/parameters.json
